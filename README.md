@@ -17,10 +17,17 @@
 ***
 ## 目录
 0. **Phong Shading-Get start with the WebGL framework**  
-熟悉代码框架的热身作业，使用给定的框架书写Phong的VertexShader和FragmentShader
-
+熟悉代码框架的热身作业，使用给定的框架书写Phong的VertexShader和FragmentShader  
+    - Phong  
+    ![ShadowMap](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/0.Phong%20Shading-Get%20start%20with%20the%20WebGL%20framework/screenshot/phong.png)  
 1. **Soft Shadow-ShadowMap,PCF&PCSS**  
-实现课程中的部分阴影生成方法：ShadowMap(硬), PCF和PCSS(软).
+实现课程中的部分阴影生成方法：ShadowMap(硬), PCF和PCSS(软).  
+    - ShadowMap  
+    ![ShadowMap](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/ShadowMap.png)  
+    - PCF  
+    ![PCF](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/ShadowMap.png)  
+    - PCSS   
+    ![PCSS](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/ShadowMap.png)  
 
 2. **Environment Lighting-PRT**  
 实现Precomputed Radience Transform,   
@@ -35,3 +42,8 @@ VertexCount ∗SHCoefficientCount的Array中，最终存储为light.txt和transf
     - **渲染：**  
 构建了PRTMaterial以及对应的shader完成了PRT的渲染，并利用SH的性质实现了环境光照的旋转。
 （本次作用使用3阶球谐拟合，使用了简单的低阶SH快速旋转方法.)
+    - **结果：**
+    - Cornell Box  
+    ![Cornell Box](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/2.Environment%20Lighting-PRT/homework2/ScreenShot/CornellBox.png) 
+    - GraceCathedral  
+    ![GraceCathedral](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/2.Environment%20Lighting-PRT/homework2/ScreenShot/GraceCathedral.png) 
