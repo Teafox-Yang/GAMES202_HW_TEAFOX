@@ -25,9 +25,9 @@
     - ShadowMap  
     ![ShadowMap](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/ShadowMap.png)  
     - PCF  
-    ![PCF](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/ShadowMap.png)  
+    ![PCF](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/PCF.png)  
     - PCSS   
-    ![PCSS](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/ShadowMap.png)  
+    ![PCSS](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/1.Soft%20Shadow-Shado%EF%BD%97Map%2CPCF%26PCSS/screenshot/PCSS.png)  
 
 2. **Environment Lighting-PRT**  
 实现Precomputed Radience Transform,   
