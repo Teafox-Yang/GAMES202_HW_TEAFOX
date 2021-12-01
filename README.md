@@ -47,3 +47,26 @@ VertexCount ∗SHCoefficientCount的Array中，最终存储为light.txt和transf
     ![Cornell Box](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/2.Environment%20Lighting-PRT/homework2/ScreenShot/CornellBox.png) 
     - GraceCathedral  
     ![GraceCathedral](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/2.Environment%20Lighting-PRT/homework2/ScreenShot/GraceCathedral.png) 
+
+3. **Global Illumination-ScreenSpaceReflection(SSR)**  
+实现Screen Space Reflection,   
+本次作业主要工作有两部分，分别是屏幕空间下光线的求交和用蒙特卡洛积分实现间接光照的估计。
+    - **屏幕空间下光线的求交：**  
+    对于屏幕空间下光线求交，起点为间接光照着色点，向间接光照方向按试探步的方法步进（超出一定距离则停止，返回false)，并计算到达的点的深度，将其与相应uv的zBuffer值比较，如果该点的深度大于zBuffer值，则该点为交点。
+
+    - **间接光照着色：**  
+    为了实现漫反射材质的间接光照，需要法线方向半球进行采样并用蒙特卡洛方法积分获得间接光照的着色，我实现了查询某一点直接光照的函数(遮挡通过简单shadowMap)，以及查询某一点漫反射BSDF的函数，因此,间接光照可表示为:  
+        Lindir+=BSDF(wi,w0,p0)/pdf*bsdf(wi,wo,p1)*DirectLight(p1)  
+        Linder=Linder/SAMPLE_NUM  
+
+    - **结果：**
+    - Direct Light 
+    ![Direct Light][1]
+    [1]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Ldir.png  
+    - inDirect Light 
+    ![inDirect Light][2]
+    [2]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Lindir.png 
+    - Screen Space Reflection 
+    ![Screen Space Reflection][3]
+    [3]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/SSR.png 
+
