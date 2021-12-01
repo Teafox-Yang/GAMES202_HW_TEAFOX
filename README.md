@@ -61,8 +61,7 @@ VertexCount ∗SHCoefficientCount的Array中，最终存储为light.txt和transf
 
     - **结果：**
     - Direct Light   
-    ![Direct Light][1]  
-    [1]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Ldir.png   
+    ![Direct Light](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Ldir.png)   
     - inDirect Light   
     ![inDirect Light](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Lindir.png)  
     - Screen Space Reflection   
