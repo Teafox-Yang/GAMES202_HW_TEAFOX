@@ -56,17 +56,15 @@ VertexCount ∗SHCoefficientCount的Array中，最终存储为light.txt和transf
 
     - **间接光照着色：**  
     为了实现漫反射材质的间接光照，需要法线方向半球进行采样并用蒙特卡洛方法积分获得间接光照的着色，我实现了查询某一点直接光照的函数(遮挡通过简单shadowMap)，以及查询某一点漫反射BSDF的函数，因此,间接光照可表示为:  
-        Lindir+=BSDF(wi,w0,p0)/pdf*bsdf(wi,wo,p1)*DirectLight(p1)  
-        Linder=Linder/SAMPLE_NUM  
+        `Lindir+=BSDF(wi,w0,p0)/pdf*bsdf(wi,wo,p1)*DirectLight(p1) `  
+        `Linder=Linder/SAMPLE_NUM  `
 
     - **结果：**
-    - Direct Light 
-    ![Direct Light][1]
-    [1]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Ldir.png  
-    - inDirect Light 
-    ![inDirect Light][2]
-    [2]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Lindir.png 
-    - Screen Space Reflection 
-    ![Screen Space Reflection][3]
-    [3]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/SSR.png 
+    - Direct Light   
+    ![Direct Light][1]  
+    [1]:https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Ldir.png   
+    - inDirect Light   
+    ![inDirect Light](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Lindir.png)  
+    - Screen Space Reflection   
+    ![Screen Space Reflection](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Lindir.png)   
 
