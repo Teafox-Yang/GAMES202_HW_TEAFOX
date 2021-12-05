@@ -65,5 +65,104 @@ VertexCount ∗SHCoefficientCount的Array中，最终存储为light.txt和transf
     - inDirect Light   
     ![inDirect Light](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/Lindir.png)  
     - Screen Space Reflection   
-    ![Screen Space Reflection](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/SSR.png)   
+    ![Screen Space Reflection](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/3.Global%20Illumination-ScreenSpaceReflection(SSR)/screenshot/SSR.png)  
+
+4. **Physically Based Materials**  
+实现Microfacet BRDF,   
+本次作业主要工作有两个阶段，第一个阶段是实现基本的Microfacet BRDF的材质。考虑到微表面模型存在一个根本问题：
+即忽略了微表面平面间的多次弹射，导致了材质的能量损失，尤其是在材质的粗糙度越高时，能量损失越严重。因此，作业的第二阶段是使用Kulla-Conty方法，通过预计算得出能量损失的补偿项，使得材质的渲染结果能近似保持真实的能量守恒。
+    - **Microfacet BRDF：**  
+    `fr(i,o)=F(i,h)G(i,o,h)D(h)/4(n·i)(n·o)`  
+        - **Fresnel项**：选用Schlick近似  
+        `F = R0 + (1 − R0)(1 − cosθ)^5`  
+        - **NDF项** : 选用GGX法线分布  
+        ```glsl
+        float DistributionGGX(vec3 N, vec3 H, float roughness)
+        {
+           // TODO: To calculate GGX NDF here
+            float a = roughness*roughness;
+            float a2 = a*a;
+            float NdotH = max(dot(N, H), 0.0);
+            float NdotH2 = NdotH*NdotH;
+
+            float nom   = a2;
+            float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+            denom = PI * denom * denom;
+
+            return nom / max(denom, 0.0001);
+        }
+        ```  
+        - **Geometry项** : 选用GGX法线分布匹配的Smith 模型:
+        ```glsl
+        float GeometrySchlickGGX(float NdotV, float roughness)
+        {
+            // TODO: To calculate Smith G1 here
+            float a = roughness;
+            float k = (a * a) / 2.0;
+
+            float nom = NdotV;
+            float denom = NdotV * (1.0 - k) + k;
+
+            return nom / denom;
+        }
+        float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+        {
+            // TODO: To calculate Smith G here
+            float NoV = max(dot(N, V), 0.0);
+            float NoL = max(dot(N, L), 0.0);
+            float ggx2 = GeometrySchlickGGX(NoV, roughness);
+            float ggx1 = GeometrySchlickGGX(NoL, roughness);
+
+            return ggx1 * ggx2;
+        }
+        ```  
+        
+    **结果如下** : 可以看出在粗糙度较高时，模型整体都变暗了，没有体现出光线在微表面中的多次弹射。
+        - PBR without bounce in microfacet   
+        ![PBR without bounce in microfacet](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/homework4/screenshot/PBR_origin.png)    
+
+    - **Kulla-Conty BRDF：**   
+         - **预计算E(µ)**  
+        为了弥补基础Microfacet模型忽略的能量，需要先计算出在入射光强度恒定为1时，对于每个粗糙度和每个出射方向，使用蒙特卡罗方法求解入射方向的积分，得到该E(µo),则可以认为1-E（µo)应是我们对于该粗糙度和出射方向需补充的能量，此时先不考虑颜色（Fresnel项（R0)=1.0) 。该阶段的结果可以存储在一张以粗糙度和cos(出射方向) 的纹理中.
+        
+            - **半球均匀采样**
+            如果通过cos加权在半球上采样入射光i，得到的结果如下:  
+            ![LUT_MC](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/lut-gen/GGX_E_MC_LUT.png)  
+            可以看到在粗糙度较低时，我们计算出的积分值非常小并且有很多噪声。这是因为低粗糙度的微表面材质接近镜面反射材质，即微表面的法线 m(即半程向量 h) 集中分布在几何法线 n 附近，而我们由采样入射光方向 i 计算出的微表面法向量 m 分布并不会集中在几何法线 n 附近，也就是说这与实际低粗糙度的微表面法线分布相差很大，因此积分值的方差就会很大。  
+            - **GGX 重要性采样**  
+            先根据NDF模型，重要性采样微表面法向m，然后利用反射关系计算入射方向，对于采样m的概率密度  
+            `pdf(m)=D(m)(m·n)`  
+            通过该pdf，可以计算出NDF对应的采样点。然后是计算采样得到的入射方向的概率，只需要将pdf(m)
+            转换为pdf(i)，两者之间乘上一个Jacobian项即可。  
+            如果通过cos加权在半球上采样入射光i，得到的结果如下:  
+            ![LUT_IS](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/lut-gen/GGX_E_LUT_IS.png) 
+         - **预计算Eavg**  
+         预计算的 Eavg 应该只随 roughness
+        变化而变化。首先对于之前已经预计算得到的 E(µ) ,对于出射方向进行采样，计算出对应的 E(µ)µ，随后按 roughness，将一行的 E(µ)µ 累加除以texture的行宽
+        即可，这样可以认为通过简单的均匀采样完成了Eavg积分的近似计算。
+            - 半球均匀采样的Eavg  
+            ![LUT_Eavg_MC](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/lut-gen/GGX_Eavg_LUT_MC.png)   
+            - 重要性采样的Eavg  
+            ![LUT_Eavg_IS](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/lut-gen/GGX_Eavg_LUT_IS.png)  
+            Eavg 表示我们能够看到的能量，在粗糙度低时微表面能量损失少，我们看到的能量多存储结果偏白；在粗糙度高时能量损失多，我们看到的能量少存储结果偏黑，整体上和我们的认知是一致的。  
+         - **实时端计算补充** BRDF  
+        根据之前计算好的E(u)和Eavg,可以计算出补充BRDF项fms(µo,µi):  
+        `fms(µo,µi)= (1 − E(µo))(1 − E(µi))/(π(1 − Eavg))`  
+        同样对于有颜色的材质，因为本来就有能量损失，那么fms需要乘上一个附加的BRDF项fadd:  
+        `fadd =Favg*Eavg/(1 − Favg(1 − Eavg))`  
+        最后对于 Kulla-Conty 材质，可以得到的 BRDF 项 fr 为：  
+        `fr = fmicro + fadd ∗ fms`
+
+         - **最终结果**  
+        ![PBR](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/homework4/screenshot/PBR.png)  
+        上方为 Kulla-Conty 方法得到的结果，下方为原始结果，可以法线在粗糙度较低时，能量损失的问题得到了解决。
+
+
+
+
+
+
+
+
+ 
 
