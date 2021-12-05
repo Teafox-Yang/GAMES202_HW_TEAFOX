@@ -117,7 +117,7 @@ VertexCount ∗SHCoefficientCount的Array中，最终存储为light.txt和transf
         }
         ```  
         
-    **结果如下** : 可以看出在粗糙度较高时，模型整体都变暗了，没有体现出光线在微表面中的多次弹射。
+    **结果如下** : 可以看出在粗糙度较高时，模型整体都变暗了，没有体现出光线在微表面中的多次弹射。  
         - PBR without bounce in microfacet   
         ![PBR without bounce in microfacet](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/homework4/screenshot/PBR_origin.png)    
 
@@ -155,7 +155,7 @@ VertexCount ∗SHCoefficientCount的Array中，最终存储为light.txt和transf
 
          - **最终结果**  
         ![PBR](https://github.com/Teafox-Yang/GAMES202_HW_TEAFOX/blob/main/4.Physical%20Based%20Materials-Kulla-Conty%20BRDF/homework4/screenshot/PBR.png)  
-        上方为 Kulla-Conty 方法得到的结果，下方为原始结果，可以法线在粗糙度较低时，能量损失的问题得到了解决。
+        上方为 Kulla-Conty 方法得到的结果，下方为原始结果，可以发现在粗糙度较低时，能量损失的问题得到了解决。
 
 
 
